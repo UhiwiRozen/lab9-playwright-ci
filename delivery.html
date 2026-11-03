@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Калькулятор доставки</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 420px; margin: 40px auto; }
+    label { display: block; margin-top: 12px; }
+    input, select, button { font-size: 16px; padding: 6px; margin-top: 4px; }
+    #result { margin-top: 16px; font-weight: bold; }
+    .error { color: #c00; }
+  </style>
+</head>
+<body>
+  <h1>Калькулятор доставки</h1>
+
+  <label for="amount">Сумма заказа, тенге</label>
+  <input id="amount" data-testid="amount" type="text" inputmode="numeric">
+
+  <label for="zone">Зона доставки</label>
+  <select id="zone" data-testid="zone">
+    <option value="city">city</option>
+    <option value="region">region</option>
+  </select>
+
+  <div>
+    <button id="calc" data-testid="calc" type="button">Рассчитать</button>
+  </div>
+
+  <div id="result" data-testid="result" role="status"></div>
+
+  <script>
+    function deliveryCost(value, zone) {
+      if (value >= 10000) {
+        return 0;
+      }
+      return zone === "city" ? 1000 : 2000;
+    }
+
+    document.getElementById("calc").addEventListener("click", function () {
+      const raw = document.getElementById("amount").value.trim();
+      const zone = document.getElementById("zone").value;
+      const result = document.getElementById("result");
+      result.className = "";
+
+      if (!/^-?\d+$/.test(raw)) {
+        result.className = "error";
+        result.textContent = "Ошибка: введите целую сумму";
+        return;
+      }
+      const value = Number(raw);
+      if (value < 0) {
+        result.className = "error";
+        result.textContent = "Ошибка: сумма не может быть отрицательной";
+        return;
+      }
+      if (zone !== "city" && zone !== "region") {
+        result.className = "error";
+        result.textContent = "Ошибка: неизвестная зона";
+        return;
+      }
+
+      const delivery = deliveryCost(value, zone);
+      result.textContent = "Доставка: " + delivery + " тенге; итого: " + (value + delivery) + " тенге";
+    });
+  </script>
+</body>
+</html>
