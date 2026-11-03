@@ -11,3 +11,5 @@ py -m venv .venv
 .venv\Scripts\python.exe -m http.server 8000 --bind 127.0.0.1
 .venv\Scripts\python.exe -m pytest -v --browser chromium
 ```
+
+CI: workflow `.github/workflows/ui-tests.yml` запускается при push, pull_request и вручную (workflow_dispatch).
